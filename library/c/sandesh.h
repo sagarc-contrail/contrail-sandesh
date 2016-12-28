@@ -18,9 +18,6 @@ extern "C" {
 #define LOG_ERR //fr now
 #define LOG_DEBUG
 
-#include "vr_win.h"
-#include <Ws2ipdef.h>
-
 typedef uint8_t u_int8_t;
 typedef uint16_t u_int16_t;
 typedef uint32_t u_int32_t;
