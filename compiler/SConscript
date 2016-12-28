@@ -4,9 +4,9 @@
 # Created by Megh Bhatt on 07/16/12.
 # Copyright (c) 2012 Contrail Systems. All rights reserved.
 #
-
+import os
 Import('SandeshEnv')
-
+print 'building sandesh compiler'
 env = SandeshEnv.Clone();
 
 rmflags = ['-Wsign-compare', '-Werror', '-fno-exceptions',
@@ -20,6 +20,9 @@ for flag in rmflags:
 env['CCFLAGS'] = cflags
 
 env.Append(CPPPATH = ['#tools/sandesh/compiler','#build/include'])
+
+if os.name == 'nt':
+ env.Append(CPPPATH = ['#windows'])
 
 # Lex and Yacc
 env.Append(YACCFLAGS = '-d')
@@ -43,3 +46,4 @@ sandesh = env.Program(target = 'sandesh',
                                 'parse/parse.cc',
                                ])
 env.Install(env['TOP_BIN'], sandesh)
+print 'done building sandesh compiler'
