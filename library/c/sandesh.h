@@ -15,8 +15,22 @@
 extern "C" {
 #endif
 #ifdef _WINDOWS
+
 #define LOG_ERR //fr now
 #define LOG_DEBUG
+
+#ifdef _NTKERNEL
+
+#include <vr_platform.h>
+#include <Ws2ipdef.h>
+
+#else
+
+#include <stdint.h>
+#include <WinSock2.h>
+#include <in6addr.h>
+
+#endif
 
 typedef uint8_t u_int8_t;
 typedef uint16_t u_int16_t;
