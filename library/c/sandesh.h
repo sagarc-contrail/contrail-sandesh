@@ -22,6 +22,7 @@ extern "C" {
 #ifdef _NTKERNEL
 
 #include <vr_os.h>
+#include <Wsk.h>
 #include <Ws2ipdef.h>
 
 #else
