@@ -25,6 +25,52 @@ extern "C" {
 #include <Wsk.h>
 #include <Ws2ipdef.h>
 
+static void *
+s_malloc(unsigned int size)
+{
+    void *mem = ExAllocatePoolWithTag(NonPagedPool, size+1, 'RVCO');
+    *(int*)mem = size;
+    mem = (char*)mem + sizeof(unsigned int);
+    return mem;
+}
+
+static void *
+s_zalloc(unsigned int size)
+{
+    void *mem = s_malloc(size);
+    NdisZeroMemory(mem, size);
+
+    return mem;
+}
+
+static void
+s_free(void *mem)
+{
+    if (mem) {
+        mem = (char*)mem - sizeof(unsigned int);
+        ExFreePoolWithTag(mem, 'RVCO');
+    }
+}
+
+static void *
+s_realloc(void *mem, unsigned int size)
+{
+    int old_size;
+
+    void *mem_tmp = s_malloc(size);
+    mem = (char*)mem - sizeof(unsigned int);
+    old_size = *(int*)mem;
+    RtlCopyMemory(mem_tmp, mem, old_size);
+    s_free(mem);
+    return mem_tmp;
+}
+
+#define os_malloc(size)                  s_malloc(size)
+#define os_zalloc(size)                  s_zalloc(size)
+#define os_free(ptr)                     s_free(ptr)
+#define os_realloc(ptr, size)            s_realloc(ptr, size)
+#define os_log(level, format, ...)
+
 #else
 
 #include <stdint.h>
@@ -94,11 +140,6 @@ extern int vrouter_dbg;
 #define OS_LOG_ERR LOG_ERR
 #define OS_LOG_DEBUG LOG_DEBUG
 
-#define os_malloc(size)                  malloc(size)
-#define os_zalloc(size)                  calloc(1, size)
-#define os_realloc(ptr, size)            realloc(ptr, size)
-#define os_free(ptr)                     free(ptr)
-#define os_log(level, format, ...)       winsyslog(level format, __VA_ARGS__)  //only for now
 #endif /* __KERNEL__ */
 
 typedef unsigned char uuid_t[16];

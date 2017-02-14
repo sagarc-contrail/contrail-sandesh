@@ -18,7 +18,10 @@
  */
 
 #include "sandesh.h"
-
+#pragma warning(disable: 4100)
+#pragma warning(disable: 4018)
+#pragma warning(disable: 4701)
+unsigned short _fltused = 0;
 int32_t thrift_binary_protocol_write_string(ThriftProtocol *, const char *, int *);
 int32_t thrift_binary_protocol_write_binary(ThriftProtocol *, const void *,
         const u_int32_t, int *);
