@@ -7,7 +7,6 @@
  *
  * Sandesh C Library
  */
-
 #ifndef __SANDESHC_H__
 #define __SANDESHC_H__
 
@@ -25,11 +24,13 @@ extern "C" {
 #include <Wsk.h>
 #include <Ws2ipdef.h>
 
+#define SxExtAllocationSandeshTag 'SAND'
+
 static void *
 s_malloc(unsigned int size)
 {
-    void *mem = ExAllocatePoolWithTag(NonPagedPool, size+1, 'RVCO');
-    *(int*)mem = size;
+    void *mem = ExAllocatePoolWithTag(NonPagedPool, size+sizeof(unsigned int), SxExtAllocationSandeshTag);
+    *(unsigned int*)mem = size;
     mem = (char*)mem + sizeof(unsigned int);
     return mem;
 }
@@ -38,7 +39,7 @@ static void *
 s_zalloc(unsigned int size)
 {
     void *mem = s_malloc(size);
-    NdisZeroMemory(mem, size);
+    RtlZeroMemory(mem, size);
 
     return mem;
 }
@@ -48,18 +49,18 @@ s_free(void *mem)
 {
     if (mem) {
         mem = (char*)mem - sizeof(unsigned int);
-        ExFreePoolWithTag(mem, 'RVCO');
+        ExFreePoolWithTag(mem, SxExtAllocationSandeshTag);
     }
 }
 
 static void *
 s_realloc(void *mem, unsigned int size)
 {
-    int old_size;
+    unsigned int old_size;
 
     void *mem_tmp = s_malloc(size);
     mem = (char*)mem - sizeof(unsigned int);
-    old_size = *(int*)mem;
+    old_size = *(unsigned int*)mem;
     RtlCopyMemory(mem_tmp, mem, old_size);
     s_free(mem);
     return mem_tmp;
