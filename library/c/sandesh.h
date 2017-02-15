@@ -77,6 +77,12 @@ s_realloc(void *mem, unsigned int size)
 #include <WinSock2.h>
 #include <in6addr.h>
 
+#define os_malloc(size)                  malloc(size)
+#define os_zalloc(size)                  calloc(1, size)
+#define os_realloc(ptr, size)            realloc(ptr, size)
+#define os_free(ptr)                     free(ptr)
+#define os_log(level, format, ...)
+
 #endif
 
 typedef uint8_t u_int8_t;
