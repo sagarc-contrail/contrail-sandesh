@@ -59,8 +59,7 @@ s_realloc(void *mem, unsigned int size)
     unsigned int old_size;
 
     void *mem_tmp = s_malloc(size);
-    mem = (char*)mem - sizeof(unsigned int);
-    old_size = *(unsigned int*)mem;
+    old_size = *(unsigned int*)((char*)mem - sizeof(unsigned int));
     RtlCopyMemory(mem_tmp, mem, old_size);
     s_free(mem);
     return mem_tmp;
