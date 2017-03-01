@@ -29,7 +29,9 @@ extern "C" {
 static void *
 s_malloc(unsigned int size)
 {
-    void *mem = ExAllocatePoolWithTag(NonPagedPool, size+sizeof(unsigned int), SxExtAllocationSandeshTag);
+    void *mem = ExAllocatePoolWithTag(NonPagedPoolNx, size+sizeof(unsigned int), SxExtAllocationSandeshTag);
+    if (!mem)
+        return NULL;
     *(unsigned int*)mem = size;
     mem = (char*)mem + sizeof(unsigned int);
     return mem;
@@ -39,6 +41,8 @@ static void *
 s_zalloc(unsigned int size)
 {
     void *mem = s_malloc(size);
+    if (!mem)
+        return NULL;
     RtlZeroMemory(mem, size);
 
     return mem;
@@ -59,6 +63,8 @@ s_realloc(void *mem, unsigned int size)
     unsigned int old_size;
 
     void *mem_tmp = s_malloc(size);
+    if (!mem)
+        return NULL;
     old_size = *(unsigned int*)((char*)mem - sizeof(unsigned int));
     RtlCopyMemory(mem_tmp, mem, old_size);
     s_free(mem);
