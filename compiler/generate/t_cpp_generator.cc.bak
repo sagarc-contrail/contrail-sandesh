@@ -20,7 +20,10 @@
  * Please see doc/old-thrift-license.txt in the Thrift distribution for
  * details.
  */
-
+#ifdef _WINDOWS
+//#include <SDKDDKVer.h>
+//#include <boost/asio.hpp>
+#endif
 
 #include <cassert>
 
@@ -799,7 +802,8 @@ void t_cpp_generator::generate_consts(std::vector<t_const*> consts) {
 #ifdef SANDESH
   f_consts_impl <<
 #ifdef _WINDOWS
-     "#include <boost/asio.hpp>" <<endl<<
+    "#include <SDKDDKVer.h>" <<endl<<
+    "#include <boost/asio.hpp>" <<endl<<
 #endif
     "#include <base/trace.h>" << endl <<
     "#include <sandesh/sandesh_types.h>" << endl <<

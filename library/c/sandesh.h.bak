@@ -17,9 +17,11 @@ extern "C" {
 #ifdef _WINDOWS
 #define LOG_ERR //fr now
 #define LOG_DEBUG
+#include<boost/asio.hpp>
 #include <stdint.h>
 
 #include<WinSock2.h>
+#include<Windows.h>
 #include<in6addr.h>
 
 typedef uint8_t u_int8_t;
