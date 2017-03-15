@@ -76,7 +76,7 @@ s_realloc(void *mem, unsigned int size)
 #define os_zalloc(size)                  s_zalloc(size)
 #define os_free(ptr)                     s_free(ptr)
 #define os_realloc(ptr, size)            s_realloc(ptr, size)
-#define os_log(level, format, ...)
+#define os_log(level, format, ...)                               //only for now
 
 #else
 
@@ -88,7 +88,7 @@ s_realloc(void *mem, unsigned int size)
 #define os_zalloc(size)                  calloc(1, size)
 #define os_realloc(ptr, size)            realloc(ptr, size)
 #define os_free(ptr)                     free(ptr)
-#define os_log(level, format, ...)
+#define os_log(level, format, ...)                               //only for now
 
 #endif
 
@@ -153,16 +153,13 @@ extern int vrouter_dbg;
 #define OS_LOG_ERR LOG_ERR
 #define OS_LOG_DEBUG LOG_DEBUG
 
-#ifndef _NTKERNEL
-
+#ifndef _WINDOWS
 #define os_malloc(size)                  malloc(size)
 #define os_zalloc(size)                  calloc(1, size)
 #define os_realloc(ptr, size)            realloc(ptr, size)
 #define os_free(ptr)                     free(ptr)
-#define os_log(level, format, ...)       winsyslog(level format, __VA_ARGS__)  //only for now
-
+#define os_log(level, format, ...)       syslog(level, format, ##arg)
 #endif
-
 #endif /* __KERNEL__ */
 
 typedef unsigned char uuid_t[16];
