@@ -949,7 +949,7 @@ int32_t
 thrift_binary_protocol_read_double (ThriftProtocol *protocol,
                                     double *value, int *error)
 {
-#ifndef __KERNEL__
+#if !defined(__KERNEL__) && !defined(_NTKERNEL)
   int32_t ret;
   union {
     void * b[8];
